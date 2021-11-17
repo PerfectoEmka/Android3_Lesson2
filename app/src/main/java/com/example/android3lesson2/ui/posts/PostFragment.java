@@ -76,7 +76,6 @@ public class PostFragment extends Fragment implements PostAdapter.OnItemClickLis
     public void OnClick(int pos) {
         Bundle bundle = new Bundle();
         Post post = adapter.getItem(pos);
-        bundle.putBoolean("IsUpdate", true);
         bundle.putSerializable("post", post);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.formFragment, bundle);

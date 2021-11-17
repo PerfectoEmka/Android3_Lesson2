@@ -45,7 +45,7 @@ public class FormFragment extends Fragment {
 
         if (getArguments() != null){
             post = (Post) getArguments().getSerializable("post");
-            isUpdate = getArguments().getBoolean("IsUpdate");
+            isUpdate = true;
             setPost();
         }
 
