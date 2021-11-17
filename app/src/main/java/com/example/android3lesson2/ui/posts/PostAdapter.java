@@ -51,6 +51,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return list.size();
     }
 
+    public void deleteItem(int pos) {
+        list.remove(pos);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemViewBinding binding;

@@ -1,5 +1,7 @@
 package com.example.android3lesson2.ui.posts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -73,25 +75,42 @@ public class PostFragment extends Fragment implements PostAdapter.OnItemClickLis
     @Override
     public void OnClick(int pos) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable();
+        Post post = adapter.getItem(pos);
+        bundle.putBoolean("IsUpdate", true);
+        bundle.putSerializable("post", post);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
         navController.navigate(R.id.formFragment, bundle);
     }
 
     @Override
     public void OnLongClick(int pos) {
-        App.api.deletePost(adapter.getItem(pos).getId()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()){
-                    Log.e("TAG", "delete " + adapter.getItem(pos));
-                }
-            }
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireActivity());
+        dialog.setTitle("Attention !!")
+                .setMessage("Delete item ? " + "\"" + adapter.getItem(pos).getTitle() + "\"")
+                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        App.api.deletePost(adapter.getItem(pos).getId()).enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if (response.isSuccessful()){
+                                    Log.e("TAG", "delete " + adapter.getItem(pos));
+                                    adapter.deleteItem(pos);
+                                }
+                            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.e("TAG", "Failed");
-            }
-        });
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Log.e("TAG", "Failed");
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show() ;
     }
 }
